@@ -1,3 +1,4 @@
+USE Personal
 CREATE TABLE Habilidades (
     id INT PRIMARY KEY IDENTITY,
     tipo VARCHAR(20) CHECK (tipo IN ('blanda', 'tecnica', 'herramienta', 'lenguaje')),
