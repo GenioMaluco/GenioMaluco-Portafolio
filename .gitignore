@@ -1,0 +1,48 @@
+# Environment de Python
+PORTAFOLIO/
+
+# Archivos generados por Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Archivos de entorno y sensibles
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+secrets.txt
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# SQL Server (archivos locales)
+*.mdf
+*.ldf
+*.bak
+
+# Logs y databases
+*.log
+*.sqlite

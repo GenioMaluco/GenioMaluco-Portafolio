@@ -1,14 +1,27 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, abort
 import pyodbc
+from functools import wraps
 
 app = Flask(__name__)
 
+
+def get_db_connection():
+    try:
+        conn = pyodbc.connect(
+            "DRIVER={ODBC Driver 17 for SQL Server};"
+            "SERVER=GENIOMALUCO\SAGITARIO;"
+            "DATABASE=PERSONAL;"
+            "Trusted_Connection=yes;"
+        )
+        return conn
+    except pyodbc.Error as e:
+        print(f"Error de conexión: {e}")
+        return None
+
 # Configuración SQL Server
-server = 'TU_SERVIDOR'
-database = 'TU_DB'
-username = 'USUARIO'
-password = 'CONTRASEÑA'
-conn_str = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}'
+server = 'GENIOMALUCO\SAGITARIO'
+database = 'PERSONAL'
+conn_str = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};Trusted_Connection=yes;'
 
 @app.route('/api/habilidades')
 def get_habilidades():
