@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi Perfil</title>
+    <style>
+        .profile-img {
+            width: 200px;
+            border-radius: 50%;
+            border: 3px solid #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ nombre }}</h1>
+    <img src="{{ url_for('serve_image', filename=imagen_url) }}" 
+         alt="Foto de perfil"
+         class="profile-img">
+    <p>Esta es mi foto de perfil profesional</p>
+</body>
+</html>
