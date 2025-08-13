@@ -1,19 +1,10 @@
-from flask import Flask, jsonify
-from config.database import Database  # Asumiendo que tienes este módulo
+from flask import Flask, render_template_string, jsonify
+from backend.routes import configure_routes
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return """
-    <h1>Bienvenido a mi Portafolio</h1>
-    <p>Endpoints disponibles:</p>
-    <ul>
-        <li><a href="/api/habilidades">/api/habilidades</a></li>
-        <li><a href="/api/persona">/api/persona</a></li>
-        <li><a href="/api/proyectos">/api/proyectos</a></li>
-    </ul>
-    """
+# Configurar las rutas
+configure_routes(app)
 
 @app.route('/api/habilidades')
 def get_habilidades():
@@ -31,4 +22,4 @@ def get_proyecto():
     return jsonify(proyecto[0] if proyecto else {"error": "Datos no encontrados"})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)

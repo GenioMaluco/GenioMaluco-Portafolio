@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio Genio Maluco</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <!-- Barra de navegación con enlace a emojis -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+        <div class="container">
+            <a class="navbar-brand" href="#">Portafolio</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('emojis') }}" style="color: #0d6efd;"> Explorador de Emojis
+            </div>
+        </div>
+    </nav>
+
+   <div class="container py-5 text-center">
+    <!-- Imagen de perfil usando el sistema de archivos estáticos de Flask -->
+    <img src="{{ url_for('static', filename='images/206850212.jpeg') }}" alt="Foto de perfil" class="profile-img">
+        
+        <h1 class="text-center mb-3">Portafolio Genio Maluco</h1>
+        <p class="lead text-muted">Desarrollador FullStack | Data Analyst</p>
+        
+        <!-- Contenido adicional de tu portafolio puede ir aquí -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
