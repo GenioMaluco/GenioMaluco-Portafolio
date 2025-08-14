@@ -4,12 +4,6 @@ class PortfolioVisualizer {
         this.profileImg = document.getElementById('profile-img');
         this.skillsContainer = document.getElementById('skills-visualization');
         
-        // Debug inicial
-        console.log("Elementos cargados:", {
-            profileImg: this.profileImg,
-            skillsContainer: this.skillsContainer
-        });
-
         if (this.profileImg && this.skillsContainer) {
             this.setupEventListeners();
         } else {
@@ -18,101 +12,77 @@ class PortfolioVisualizer {
     }
 
     setupEventListeners() {
-        this.profileImg.addEventListener('click', async (e) => {
+        this.profileImg.addEventListener('click', (e) => {
             e.stopPropagation();
-            
-            if (this.profileImg.classList.contains('profile-minimized')) {
-                this.hideSkillsVisualization();
-            } else {
-                await this.showSkillsVisualization();
-            }
+            this.toggleSkillsVisualization();
         });
+    }
+
+    async toggleSkillsVisualization() {
+        if (this.skillsContainer.classList.contains('visible')) {
+            this.hideSkillsVisualization();
+        } else {
+            await this.showSkillsVisualization();
+        }
     }
 
     async showSkillsVisualization() {
         try {
-            console.log("Iniciando visualización de habilidades...");
-            this.profileImg.classList.add('profile-minimized');
-            
             const skills = await this.fetchSkills();
-            console.log("Habilidades obtenidas:", skills); // Debug
-            
-            if (!skills || skills.length === 0) {
-                console.warn("No se recibieron habilidades o el array está vacío");
+            if (!skills || !skills.tipos || skills.tipos.length === 0) {
+                console.warn("No se recibieron habilidades válidas");
                 return;
             }
             
             this.createSkillsVisualization(skills);
             this.skillsContainer.classList.add('visible');
-            
+            document.querySelector('.container-perfil').classList.add('expanded');
         } catch (error) {
             console.error("Error en showSkillsVisualization:", error);
         }
     }
 
     hideSkillsVisualization() {
-        this.profileImg.classList.remove('profile-minimized');
         this.skillsContainer.classList.remove('visible');
+        document.querySelector('.container-perfil').classList.remove('expanded');
         this.skillsContainer.innerHTML = '';
     }
 
     async fetchSkills() {
         try {
-            console.log("Obteniendo habilidades desde la API...");
             const response = await fetch('/api/habilidades');
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const skills = await response.json();
-            console.log("Datos crudos de la API:", skills); // Debug
-            
-            return skills;
-            
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return await response.json();
         } catch (error) {
             console.error("Error al obtener habilidades:", error);
-            return [];
+            return { tipos: [], detalles: [] };
         }
     }
 
-    async createSkillsVisualization() {
-        const response = await this.fetchSkills();
-        const { tipos, detalles } = response;
-        
-        // Ajusta el contenedor principal
-        document.querySelector('.container-perfil').classList.add('expanded');
-        
-        // Posicionamiento
-        const profileImg = document.getElementById('profile-img');
-        const imgRect = profileImg.getBoundingClientRect();
+    createSkillsVisualization(skills) {
+        const { tipos, detalles } = skills;
+        const imgRect = this.profileImg.getBoundingClientRect();
         const centerX = imgRect.left + imgRect.width / 2;
         const centerY = imgRect.top + imgRect.height / 2;
+        const radius = 180;
         
-        // Radio basado en el tamaño de pantalla
-        const radius = Math.min(window.innerWidth, window.innerHeight) * 0.25;
+        // 4 direcciones cardinales
+        const angles = [0, Math.PI/2, Math.PI, 3*Math.PI/2];
         
-        // Limpia el contenedor
         this.skillsContainer.innerHTML = '';
         
-        // Crea burbujas para cada tipo
-        tipos.forEach((tipoObj, index) => {
-            const angle = (index * 2 * Math.PI) / tipos.length;
+        tipos.slice(0, 4).forEach((tipoObj, index) => {
+            const angle = angles[index];
             const bubbleX = centerX + radius * Math.cos(angle);
             const bubbleY = centerY + radius * Math.sin(angle);
             
-            // Filtra habilidades por tipo
-            const habilidadesTipo = detalles.filter(h => h.tipo === tipoObj.tipo);
-            
-            // Crea la línea
             this.createSkillLine(centerX, centerY, bubbleX, bubbleY);
-            
-            // Crea la burbuja
             this.createSkillBubble(
                 bubbleX, 
                 bubbleY, 
-                tipoObj.tipo,
-                habilidadesTipo
+                tipoObj.tipo, 
+                detalles.filter(h => h.tipo === tipoObj.tipo),
+                index
             );
         });
     }
@@ -121,12 +91,11 @@ class PortfolioVisualizer {
         const line = document.createElement('div');
         line.className = 'skill-line';
         
-        // Cálculo de longitud y ángulo
         const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
         const angle = Math.atan2(endY - startY, endX - startX);
         
         line.style.cssText = `
-            position: absolute;
+            position: fixed;
             left: ${startX}px;
             top: ${startY}px;
             width: ${length}px;
@@ -135,19 +104,26 @@ class PortfolioVisualizer {
             transform: rotate(${angle}rad);
             transform-origin: 0 0;
             z-index: 1;
+            opacity: 0;
+            transition: all 0.5s ease-out;
         `;
         
         this.skillsContainer.appendChild(line);
+        
+        // Animación
+        setTimeout(() => {
+            line.style.opacity = '1';
+        }, 50);
     }
 
-    createSkillBubble(x, y, tipo, habilidades) {
-        const bubble = document.createElement('div');
-        bubble.className = 'skill-bubble';
-        bubble.dataset.tipo = tipo;
+    createSkillBubble(x, y, tipo, habilidades, index) {
+        const bubbleContainer = document.createElement('div');
+        bubbleContainer.className = 'skill-bubble-container';
         
-        bubble.innerHTML = `
-            <div class="skill-type">${tipo}</div>
-            <div class="skill-details" style="display:none">
+        bubbleContainer.innerHTML = `
+            <div class="skill-bubble"></div>
+            <div class="skill-type-label">${tipo}</div>
+            <div class="skill-details">
                 ${habilidades.map(h => `
                     <div class="skill-item">
                         <span class="skill-name">${h.nombre}</span>
@@ -157,34 +133,40 @@ class PortfolioVisualizer {
             </div>
         `;
         
-        bubble.style.cssText = `
-            position: absolute;
+        bubbleContainer.style.cssText = `
+            position: fixed;
             left: ${x}px;
             top: ${y}px;
             transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: all 0.5s ease-out ${index * 0.1}s;
+            z-index: 10;
         `;
         
         // Eventos hover
+        const bubble = bubbleContainer.querySelector('.skill-bubble');
+        const details = bubbleContainer.querySelector('.skill-details');
+        
         bubble.addEventListener('mouseenter', () => {
-            bubble.querySelector('.skill-details').style.display = 'block';
-            bubble.classList.add('expanded');
+            details.style.display = 'block';
         });
         
         bubble.addEventListener('mouseleave', () => {
-            bubble.querySelector('.skill-details').style.display = 'none';
-            bubble.classList.remove('expanded');
+            details.style.display = 'none';
         });
         
-        this.skillsContainer.appendChild(bubble);
+        this.skillsContainer.appendChild(bubbleContainer);
+        
+        // Animación
+        setTimeout(() => {
+            bubbleContainer.style.opacity = '1';
+        }, 50 + (index * 100));
     }
 }
 
-// Inicialización con verificación de errores
-try {
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log("DOM completamente cargado, iniciando PortfolioVisualizer...");
-        new PortfolioVisualizer();
-    });
-} catch (error) {
-    console.error("Error al inicializar PortfolioVisualizer:", error);
-}
+// Inicialización
+document.addEventListener('DOMContentLoaded', () => {
+    new PortfolioVisualizer();
+});
