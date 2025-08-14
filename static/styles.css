@@ -58,3 +58,24 @@
 .header {
     position: relative;
 }
+.container-perfil{
+    color: #0d6efd;
+    width: 100%;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.container-perfil:hover{
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.Subtitulo{
+    color: grey;
+}
+
+.container-perfil:hover .Subtitulo{
+    color: white;
+    transition: all 0.3s ease;
+}
