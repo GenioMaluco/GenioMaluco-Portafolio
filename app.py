@@ -1,15 +1,20 @@
 from flask import Flask, render_template_string, jsonify
 from backend.routes import configure_routes
+from backend.config.database import Database
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='/static')
 
 # Configurar las rutas
 configure_routes(app)
 
 @app.route('/api/habilidades')
 def get_habilidades():
+    tipos = Database.execute_query("SELECT DISTINCT tipo FROM Habilidades")
     habilidades = Database.execute_query("SELECT tipo, nombre, nivel FROM Habilidades")
-    return jsonify(habilidades if habilidades else {"error": "No se pudo conectar a la BD"})
+    return jsonify({
+    'tipos': tipos,
+    'detalles': habilidades
+    })
 
 @app.route('/api/persona')
 def get_persona():

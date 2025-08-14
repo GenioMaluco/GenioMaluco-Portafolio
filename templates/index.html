@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <!-- Barra de navegación con enlace a emojis -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
         <div class="container">
             <a class="navbar-brand" href="#">Portafolio</a>
@@ -17,17 +16,26 @@
             </div>
         </div>
     </nav>
-
-   <div class="container-perfil">
-    <!-- Imagen de perfil usando el sistema de archivos estáticos de Flask -->
-    <img src="{{ url_for('static', filename='images/206850212.jpeg') }}" alt="Foto de perfil" class="profile-img">
-        
+    <div class="container-perfil">
+        <div id="skills-visualization"></div>
+        <img id="profile-img" src="{{ url_for('static', filename='images/206850212.jpeg') }}" alt="Foto de perfil" class="profile-img">
         <h1 class="Titulo">Portafolio Genio Maluco</h1>
         <p class="Subtitulo">Desarrollador FullStack | Data Analyst</p>
-        
-        <!-- Contenido adicional de tu portafolio puede ir aquí -->
+    </div>
+
+    <div class="EndPoints">
+        <h1>Bienvenido a mi Portafolio</h1>
+        <p>Endpoints disponibles:</p>
+        <ul>
+            <li><a href="/api/habilidades">/api/habilidades</a></li>
+            <li><a href="/api/persona">/api/persona</a></li>
+            <li><a href="/api/proyectos">/api/proyectos</a></li>
+        </ul>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/portafolio.js') }}"></script>
 </body>
 </html>

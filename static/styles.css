@@ -30,20 +30,19 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(200px); }
+    to { opacity: 1; transform: translateY(200px); }
 }
 
 /* ESTILOS PARA IMAGEN DE PERFIL */
 .profile-img {
     width: 200px;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 50%;
     border: 5px solid #0d6efd;
-    margin: 20px auto;
-    display: block;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 200px;
+    border-radius: 100%;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    z-index: 10;
 }
 .nav-link {
     font-weight: 500;
@@ -67,6 +66,7 @@
 }
 
 .container-perfil:hover{
+    background-color: #0d6efd;
     color: white;
     transition: all 0.3s ease;
 }
@@ -78,4 +78,117 @@
 .container-perfil:hover .Subtitulo{
     color: white;
     transition: all 0.3s ease;
+}
+
+.profile-img:hover {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #5fdfe4;
+}
+
+/* Contenedor expandido */
+.container-perfil.expanded {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 2rem;
+}
+
+/* Títulos centrados */
+.Titulo, .Subtitulo {
+    text-align: center;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+/* Burbujas mejoradas */
+.skill-bubble {
+    background: white;
+    border: 2px solid #3498db;
+    border-radius: 50%;
+    padding: 15px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.skill-bubble.expanded {
+    width: auto;
+    height: auto;
+    min-width: 150px;
+    min-height: 150px;
+    border-radius: 20px;
+    background: #f8f9fa;
+}
+
+.skill-type {
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.skill-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.skill-bubble:hover .skill-details {
+    max-height: 300px;
+    display: block;
+}
+
+.skill-item {
+    margin: 5px 0;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.skill-name {
+    font-size: 12px;
+}
+
+.skill-level {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.skill-bubble {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.skill-line {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+footer {
+    margin-top: auto;
+    padding: 1rem 0;
+    text-align: center;
+    background: #f8f9fa;
 }
